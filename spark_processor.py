@@ -13,7 +13,6 @@ spark = SparkSession.builder \
     .getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
-print("🚀 Spark Engine Started... Waiting for Kafka data on 'order_topic'...")
 try:
     df = spark.readStream.format("kafka") \
         .option("kafka.bootstrap.servers", "localhost:9092") \
@@ -29,7 +28,7 @@ try:
 
 def write_to_mysql(target_df, batch_id):
         if target_df.count() > 0:
-            print(f"📦 Processing Batch ID: {batch_id}")
+            print(f"Processing Batch ID: {batch_id}")
             try:
                 target_df.write.format("jdbc") \
                     .option("url", f"jdbc:mysql://{wsl_ip}:3306/sales_db") \
@@ -38,13 +37,10 @@ def write_to_mysql(target_df, batch_id):
                     .option("user", "root") \
                     .option("password", mysql_pw) \
                     .mode("append").save()
-                print(f"✅ Batch {batch_id} successfully saved to MySQL!")
+                print(f"Batch {batch_id} successfully saved to MySQL!")
             except Exception as e:
-                print(f"❌ Error saving to MySQL: {e}")
+                print(f" Error saving to MySQL: {e}")
         else:
-            print(f"⏳ Waiting for new data... (Batch {batch_id} empty)")
-
-    # 5. Streaming start panrom
     query = processed_df.writeStream \
         .foreachBatch(write_to_mysql) \
         .start()
@@ -52,4 +48,4 @@ def write_to_mysql(target_df, batch_id):
     query.awaitTermination()
 
 except Exception as e:
-    print(f"💥 Fatal Error: {e}")
+    print(f" Fatal Error: {e}")
