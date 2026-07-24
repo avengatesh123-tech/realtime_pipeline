@@ -10,9 +10,8 @@ producer = KafkaProducer(
 
 items = ['Mobile', 'Laptop', 'Watch']
 
-print("🚀 Data anuppa aarambichachu...")
 while True:
     data = {"product_name": random.choice(items), "price": random.randint(100, 1000)}
     producer.send('order_topic', value=data)
-    print(f"📦 Sent: {data}")
+    print(f" Sent: {data}")
     time.sleep(5) 
