@@ -12,7 +12,7 @@ with DAG(
     'de_project_monitor',
     default_args=default_args,
     description='Monitoring MySQL for new data',
-    schedule_interval='* * * * *1
+    schedule_interval='* * * * *1'
     start_date=datetime(2023, 1, 1),
     catchup=False
 ) as dag:
